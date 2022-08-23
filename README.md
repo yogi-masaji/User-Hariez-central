@@ -1,4 +1,4 @@
-# About this project
+# React Landing Page - Material [UI One Pirate theme](https://mui.com/store/previews/onepirate/)
 
 ## Description
 
