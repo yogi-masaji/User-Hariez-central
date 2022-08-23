@@ -6,6 +6,9 @@ import Container from '@mui/material/Container';
 import Button from '../components/Button';
 import Typography from '../components/Typography';
 
+// Animations on scroll
+import { AnimationOnScroll } from 'react-animation-on-scroll';
+
 const item = {
   display: 'flex',
   flexDirection: 'column',
@@ -52,54 +55,75 @@ function ProductHowItWorks() {
             opacity: 0.7,
           }}
         />
-        <Typography variant='h4' marked='center' component='h2' sx={{ mb: 14 }}>
-          How it works
-        </Typography>
+        <AnimationOnScroll animateIn='animate__bounceIn' duration={2}>
+          <Typography
+            variant='h4'
+            marked='center'
+            component='h2'
+            sx={{ mb: 14 }}
+          >
+            How it works
+          </Typography>
+        </AnimationOnScroll>
         <div>
           <Grid container spacing={5}>
             <Grid item xs={12} md={4}>
-              <Box sx={item}>
-                <Box sx={number}>1.</Box>
-                <Box
-                  component='img'
-                  src='/static/themes/onepirate/productHowItWorks1.svg'
-                  alt='suitcase'
-                  sx={image}
-                />
-                <Typography variant='h5' align='center'>
-                  Appointment every Wednesday 9am.
-                </Typography>
-              </Box>
+              <AnimationOnScroll animateIn='animate__flip' duration={1}>
+                <Box sx={item}>
+                  <Box sx={number}>1.</Box>
+                  <Box
+                    component='img'
+                    src='/static/themes/onepirate/productHowItWorks1.svg'
+                    alt='suitcase'
+                    sx={image}
+                  />
+                  <Typography variant='h5' align='center'>
+                    Appointment every Wednesday 9am.
+                  </Typography>
+                </Box>
+              </AnimationOnScroll>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Box sx={item}>
-                <Box sx={number}>2.</Box>
-                <Box
-                  component='img'
-                  src='/static/themes/onepirate/productHowItWorks2.svg'
-                  alt='graph'
-                  sx={image}
-                />
-                <Typography variant='h5' align='center'>
-                  First come, first served. Our offers are in limited
-                  quantities, so be quick.
-                </Typography>
-              </Box>
+              <AnimationOnScroll
+                animateIn='animate__flip'
+                duration={1}
+                delay={500}
+              >
+                <Box sx={item}>
+                  <Box sx={number}>2.</Box>
+                  <Box
+                    component='img'
+                    src='/static/themes/onepirate/productHowItWorks2.svg'
+                    alt='graph'
+                    sx={image}
+                  />
+                  <Typography variant='h5' align='center'>
+                    First come, first served. Our offers are in limited
+                    quantities, so be quick.
+                  </Typography>
+                </Box>
+              </AnimationOnScroll>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Box sx={item}>
-                <Box sx={number}>3.</Box>
-                <Box
-                  component='img'
-                  src='/static/themes/onepirate/productHowItWorks3.svg'
-                  alt='clock'
-                  sx={image}
-                />
-                <Typography variant='h5' align='center'>
-                  {'New offers every week. New experiences, new surprises. '}
-                  {'Your Sundays will no longer be alike.'}
-                </Typography>
-              </Box>
+              <AnimationOnScroll
+                animateIn='animate__flip'
+                duration={1}
+                delay={1000}
+              >
+                <Box sx={item}>
+                  <Box sx={number}>3.</Box>
+                  <Box
+                    component='img'
+                    src='/static/themes/onepirate/productHowItWorks3.svg'
+                    alt='clock'
+                    sx={image}
+                  />
+                  <Typography variant='h5' align='center'>
+                    {'New offers every week. New experiences, new surprises. '}
+                    {'Your Sundays will no longer be alike.'}
+                  </Typography>
+                </Box>
+              </AnimationOnScroll>
             </Grid>
           </Grid>
         </div>

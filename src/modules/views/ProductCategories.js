@@ -5,6 +5,9 @@ import ButtonBase from '@mui/material/ButtonBase';
 import Container from '@mui/material/Container';
 import Typography from '../components/Typography';
 
+// Animations on scroll
+import { AnimationOnScroll } from 'react-animation-on-scroll';
+
 const ImageBackdrop = styled('div')(({ theme }) => ({
   position: 'absolute',
   left: 0,
@@ -103,10 +106,12 @@ const images = [
 
 export default function ProductCategories() {
   return (
-    <Container component="section" sx={{ mt: 8, mb: 4 }}>
-      <Typography variant="h4" marked="center" align="center" component="h2">
-        For all tastes and all desires
-      </Typography>
+    <Container component='section' sx={{ mt: 8, mb: 4 }}>
+      <AnimationOnScroll animateIn='animate__fadeIn' duration={2}>
+        <Typography variant='h4' marked='center' align='center' component='h2'>
+          For all tastes and all desires
+        </Typography>
+      </AnimationOnScroll>
       <Box sx={{ mt: 8, display: 'flex', flexWrap: 'wrap' }}>
         {images.map((image) => (
           <ImageIconButton
@@ -127,7 +132,7 @@ export default function ProductCategories() {
                 backgroundImage: `url(${image.url})`,
               }}
             />
-            <ImageBackdrop className="imageBackdrop" />
+            <ImageBackdrop className='imageBackdrop' />
             <Box
               sx={{
                 position: 'absolute',
@@ -142,13 +147,13 @@ export default function ProductCategories() {
               }}
             >
               <Typography
-                component="h3"
-                variant="h6"
-                color="inherit"
-                className="imageTitle"
+                component='h3'
+                variant='h6'
+                color='inherit'
+                className='imageTitle'
               >
                 {image.title}
-                <div className="imageMarked" />
+                <div className='imageMarked' />
               </Typography>
             </Box>
           </ImageIconButton>
