@@ -14,8 +14,6 @@ Live demo is not available yet ( still working on deploying it ) but you can run
 
 If you need any extra information feel free to contact me at sanduteofil@gmail.com. Even if you need help with deploying it on the web.
 
-If you would like to support me in any way, a visit [here](https://www.buymeacoffee.com/j8SEluQl4A) is always welcomed.
-
 * The original template and page content belongs entirely to Material UI. I just adapted the project locally so you don't have to and added the required routes to navigate in the application. 
 
 Stay cool !
