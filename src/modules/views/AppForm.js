@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Paper from '../components/Paper';
+import { Box, Paper } from '@mui/material';
 
 function AppForm(props) {
   const { children } = props;
@@ -19,7 +18,12 @@ function AppForm(props) {
         <Box sx={{ mt: 7, mb: 12 }}>
           <Paper
             background="light"
-            sx={{ py: { xs: 4, md: 8 }, px: { xs: 3, md: 6 } }}
+            sx={{
+              py: { xs: 4, md: 8 },
+              px: { xs: 3, md: 6 },
+              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+              borderRadius: '8px',
+            }}
           >
             {children}
           </Paper>

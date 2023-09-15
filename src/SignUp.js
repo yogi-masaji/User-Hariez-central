@@ -1,137 +1,229 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
-import { Field, Form, FormSpy } from 'react-final-form';
-import Typography from './modules/components/Typography';
-import AppFooter from './modules/views/AppFooter';
-import AppAppBar from './modules/views/AppAppBar';
-import AppForm from './modules/views/AppForm';
-import { email, required } from './modules/form/validation';
-import RFTextField from './modules/form/RFTextField';
-import FormButton from './modules/form/FormButton';
-import FormFeedback from './modules/form/FormFeedback';
-import withRoot from './modules/withRoot';
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
+import AppFooter from "./modules/views/AppFooter";
+import AppAppBar from "./modules/views/AppAppBar";
+import AppForm from "./modules/views/AppForm";
+// @mui
+import { Stack, IconButton, TextField, Checkbox, Alert, Typography, FormHelperText, Modal } from "@mui/material";
+import { green } from "@mui/material/colors";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { LoadingButton } from "@mui/lab";
+// components
+import withRoot from "./modules/withRoot";
 
-function SignUp() {
-  const [sent, setSent] = React.useState(false);
+// ----------------------------------------------------------------------
 
-  const validate = (values) => {
-    const errors = required(
-      ['firstName', 'lastName', 'email', 'password'],
-      values
-    );
+function SignIn() {
+  const [nama, setNama] = useState("");
+  const [email, setEmail] = useState("");
+  const [nomorTelepon, setNomorTelepon] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-    if (!errors.email) {
-      const emailError = email(values.email);
-      if (emailError) {
-        errors.email = emailError;
+  useEffect(() => {
+    if (isSuccess) {
+      setTimeout(() => {
+        navigate("/sign-in", { replace: true });
+      }, 2000);
+    }
+  }, [isSuccess, navigate]);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    
+    const fields = [
+      { value: nama, message: "Please enter name" },
+      { value: email, message: "Please enter email" },
+      { value: nomorTelepon, message: "Please enter phone number" },
+      { value: password, message: "Please enter password" },
+    ];
+
+    for (const field of fields) {
+      if (!field.value) {
+        setIsError(true);
+        setErrorMessage(field.message);
+        return;
       }
     }
 
-    return errors;
+    if (password.length < 8) {
+      setIsError(true);
+      setErrorMessage("Password should be at least 8 characters long.");
+      return;
+    }
+    setIsLoading(true);
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setIsError(true);
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+
+    axios
+      .post("http://127.0.0.1:3000/user/signup", {
+        nama,
+        email,
+        password,
+        nomorTelepon,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setIsSuccess(true);
+        setIsError(false);
+        setErrorMessage("");
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsError(true);
+        setIsSuccess(false);
+        setIsLoading(false);
+        if (error.response?.data?.message === "wrong email/password") {
+          setErrorMessage(error.response.data.message);
+        } else {
+          console.log(error);
+        }
+      });
+  };
+  const handleCloseModal = () => {
+    setIsSuccess(false);
+    navigate("/sign-in", { replace: true });
+  };
+  const handleNomorTeleponChange = (e) => {
+    setNomorTelepon(e.target.value.replace(/\D/g, ""));
+    if (isError) {
+      setIsError(false);
+      setErrorMessage("");
+    }
+  };
+  const handleNamaChange = (e) => {
+    setNama(e.target.value);
+    if (isError) {
+      setIsError(false);
+      setErrorMessage("");
+    }
   };
 
-  const handleSubmit = () => {
-    setSent(true);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (isError) {
+      setIsError(false);
+      setErrorMessage("");
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (isError) {
+      setIsError(false);
+      setErrorMessage("");
+    }
   };
 
   return (
-    <React.Fragment>
+    <>
       <AppAppBar />
       <AppForm>
-        <React.Fragment>
-          <Typography variant='h3' gutterBottom marked='center' align='center'>
+        <Stack spacing={3} sx={{ my: 5 }}>
+          <Typography variant="h3" gutterBottom marked="center" align="center">
             Sign Up
           </Typography>
-          <Typography variant='body2' align='center'>
-            <Link href='/sign-in' underline='always'>
-              Already have an account?
-            </Link>
-          </Typography>
-        </React.Fragment>
-        <Form
-          onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
-          validate={validate}
-        >
-          {({ handleSubmit: handleSubmit2, submitting }) => (
-            <Box
-              component='form'
-              onSubmit={handleSubmit2}
-              noValidate
-              sx={{ mt: 6 }}
+          <TextField
+            name="nama"
+            label="Nama"
+            value={nama}
+            onChange={handleNamaChange}
+          />
+          <TextField
+            name="email"
+            label="Email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+          <TextField
+            name="nomor telepon"
+            label="Nomor Telepon"
+            value={nomorTelepon}
+            onChange={handleNomorTeleponChange}
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          />
+          <TextField
+            name="password"
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={handlePasswordChange}
+          />
+
+          {isError && (
+            <Alert
+              severity="error"
+              onClose={() => setIsError(false)}
+              sx={{
+                backgroundColor: "#f44336", // Custom background color
+                color: "#ffffff", // Custom text color
+                borderRadius: "8px", // Custom border radius
+                marginTop: "16px", // Custom margin top
+              }}
             >
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Field
-                    autoFocus
-                    component={RFTextField}
-                    disabled={submitting || sent}
-                    autoComplete='given-name'
-                    fullWidth
-                    label='First name'
-                    name='firstName'
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Field
-                    component={RFTextField}
-                    disabled={submitting || sent}
-                    autoComplete='family-name'
-                    fullWidth
-                    label='Last name'
-                    name='lastName'
-                    required
-                  />
-                </Grid>
-              </Grid>
-              <Field
-                autoComplete='email'
-                component={RFTextField}
-                disabled={submitting || sent}
-                fullWidth
-                label='Email'
-                margin='normal'
-                name='email'
-                required
-              />
-              <Field
-                fullWidth
-                component={RFTextField}
-                disabled={submitting || sent}
-                required
-                name='password'
-                autoComplete='new-password'
-                label='Password'
-                type='password'
-                margin='normal'
-              />
-              <FormSpy subscription={{ submitError: true }}>
-                {({ submitError }) =>
-                  submitError ? (
-                    <FormFeedback error sx={{ mt: 2 }}>
-                      {submitError}
-                    </FormFeedback>
-                  ) : null
-                }
-              </FormSpy>
-              <FormButton
-                sx={{ mt: 3, mb: 2 }}
-                disabled={submitting || sent}
-                color='secondary'
-                fullWidth
-              >
-                {submitting || sent ? 'In progress…' : 'Sign Up'}
-              </FormButton>
-            </Box>
+              {errorMessage}
+            </Alert>
           )}
-        </Form>
+
+          <Typography>
+            Already have an account?
+            <Link to="/sign-in">Sign in</Link>
+          </Typography>
+        </Stack>
+
+        <LoadingButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          onClick={handleClick}
+          loading={isLoading}
+          disabled={isLoading}
+        >
+          {isLoading ? "Sign Up..." : "Sign Up"}
+        </LoadingButton>
       </AppForm>
+      <Modal open={isSuccess} onClose={handleCloseModal}>
+  <div
+    style={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      maxWidth: "90%",
+      width: 400,
+      padding: "24px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      textAlign: "center",
+      backgroundColor: "#ffffff",
+      borderRadius: 8,
+    }}
+  >
+    <AccountCircleIcon sx={{ fontSize: 64, color: green[500], mb: 2 }} />
+    <Typography variant="h6" gutterBottom sx={{ color: green[500], mb: 2 }}>
+      Account Created
+    </Typography>
+    <Typography variant="body1">
+      Your account has been successfully created. You will be redirected to the sign-in page in a moment.
+    </Typography>
+  </div>
+</Modal>
       <AppFooter />
-    </React.Fragment>
+    </>
   );
 }
 
-export default withRoot(SignUp);
+export default withRoot(SignIn);
